@@ -1,40 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Add Route</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="mobile-web-app-capable" content="yes"/>
-    <link rel="shortcut icon" sizes="196x196" href="images/icon.png"/>
-    <link rel="apple-touch-icon-precomposed" href="images/icon.png"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" sizes="196x196" href="images/icon.png" />
+    <link rel="apple-touch-icon-precomposed" href="images/icon.png" />
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <!-- Your content here -->
- <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-          <header class="mdl-layout__header">
-            <button onclick="location.href = 'index.html';" class="mdl-layout-icon mdl-button mdl-js-button mdl-button--icon"> 
-              <i class="material-icons">arrow_back</i>
-            </button>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
-              <span class="mdl-layout-title" id="headerBarTitle">add route</span>
+                <!-- Title -->
+                <span class="mdl-layout-title"><a href="index.html">
+                     <i class="material-icons">arrow_back</i>
+                </a></span>
+                <span class="mdl-layout-title">Add Route</span>
+                <div class="mdl-layout-spacer"></div>
+                <nav class="mdl-navigation ">
+                    <div class="mdl-navigation__link" id="saveRoute">
+                        <i class="material-icons">save</i>
+                    </div>
+                </nav>
             </div>
-          </header>
-
-          <main class="mdl-layout__content">
-            <!--   Main page content here:   -->  
-                
-          </main>
-          <div id="toast" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-          </div>
+        </header>
+        <main class="mdl-layout__content">
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--12-col">
+                    <div class="btn-group">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="addPath">
+                            Confirm
+                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="removePath">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+                <div class="mdl-cell mdl-cell--12-col">
+                    <div id="addRouteMap">
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div style="position:fixed;bottom:20px;right:50px;z-index:100">
+            <div class="mdl-cell mdl-cell--12-col">
+                <div class="btn-group">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="locateMe">
+                        Locate Me
+                    </button>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="placeIcon">
+                        Bring Marker Back
+                    </button>
+                </div>
+            </div>
         </div>
+    </div>
+    <dialog class="mdl-dialog">
+        <h4 class="mdl-dialog__title">Name of Route</h4>
+        <div class="mdl-dialog__content">
+            <p>
+                Please enter the name of route
+            </p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="routeTitle">
+            </div>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button" id="save">Save</button>
+            <button type="button" class="mdl-button close" id="close">Close</button>
+        </div>
+    </dialog>
     <!--   JavaScript files:   -->
     <script src="js/shared.js"></script>
     <script src="js/utility.js"></script>
     <script src="js/addRoutePage.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.14&libraries=geometry&callback=initMap"></script>
 </body>
+
 </html>

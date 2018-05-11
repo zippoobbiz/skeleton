@@ -1,24 +1,70 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Navigator</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-        <link rel="stylesheet" href="css/style.css" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="shortcut icon" sizes="196x196" href="images/icon.png" />
-        <link rel="apple-touch-icon-precomposed" href="images/icon.png" />
-    </head>
 
-    <body>
-        <!-- Your content here -->
-        
-        <!--   JavaScript files:   -->
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-        <script src="js/utility.js"></script>
-        <script src="js/shared.js"></script>
-        <script src="js/navigatePage.js"></script>
-    </body>
+<head>
+    <title>Navigator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" sizes="196x196" href="images/icon.png" />
+    <link rel="apple-touch-icon-precomposed" href="images/icon.png" />
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <span class="mdl-layout-title"><a href="index.html">
+                     <i class="material-icons">arrow_back</i>
+                </a></span>
+                <span class="mdl-layout-title">Navigate</span>
+                <div class="mdl-layout-spacer"></div>
+            </div>
+        </header>
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--12-col">
+                        <div>
+                            <div id="map" style="position:relative">
+                            </div>
+                            <img src="" alt="" id="directionImg">
+                        </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                        Next Action: <span class="mdl-list__item-primary-content" id="nextAction">
+      
+    </span>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                        Average Speed: <span class="mdl-list__item-primary-content" id="avgSpeed">
+     
+    </span>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                        Time Remaining: <span class="mdl-list__item-primary-content" id="timeRemaining">
+     
+    </span>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                        Distance Remaining: <span class="mdl-list__item-primary-content" id="distRemaining">
+      
+    </span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!--   JavaScript files:   -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="js/utility.js"></script>
+    <script src="js/shared.js"></script>
+    <script src="js/navigatePage.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.14&libraries=geometry&callback=startNavigate"></script>
+</body>
+
 </html>

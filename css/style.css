@@ -1,0 +1,20 @@
+.mdl-list__item {
+    cursor: pointer;
+}
+
+#map {
+    height: 70vh;
+}
+
+#addRouteMap {
+    height: 80vh;
+}
+
+#directionImg{
+	position: absolute;
+	top:58vh;
+    left: 10;
+	width:100px;
+	height: 100px;
+	z-index:100;
+}

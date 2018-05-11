@@ -224,7 +224,7 @@ class Navigator {
                 fillOpacity: 1,
             }
         });
-
+        this.marker.setMap(this.map);
         this.updateCircle({
             fillColor: currentPosition.accuracy < ACCURACY ? "#00FF00" : "#FF0000",
             center: currentPosition.latLng,

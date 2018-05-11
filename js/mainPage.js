@@ -1,6 +1,3 @@
-
-
-
 var pathData = {
     campus: "clayton",
     callback: "pathResponse"
@@ -33,8 +30,12 @@ function pathResponse(pathArray) {
         localStorage.setItem(MONASH_ROUTE, pathStringObject);
         var monashPathList = createPathList(MONASH_ROUTE);
         var userPathList = createPathList(USER_ROUTE);
-        renderPathList(monashPathList, 'monashRoute');
-        renderPathList(userPathList, 'userRoute');
+        if(monashPathList){
+             renderPathList(monashPathList, 'monashRoute');
+        }
+        if(userPathList){
+            renderPathList(userPathList, 'userRoute');
+        } 
     } else {
 
     }
@@ -44,10 +45,13 @@ function createPathList(source) {
     let pathList = new PathList(source);
     if (typeof(Storage) !== "undefined") {
         var pathFromLocalStroage = JSON.parse(localStorage.getItem(source));
-        pathFromLocalStroage.forEach((item) => {
-            pathList.add(new Path(item.locations, item.title));
-        });
-        return pathList;
+        if (pathFromLocalStroage) {
+            pathFromLocalStroage.forEach((item) => {
+                pathList.add(new Path(item.locations, item.title));
+            });
+            return pathList;
+        }
+        return null;
     } else {
         console.log("Error: Trying with another browser.")
     }

@@ -209,7 +209,7 @@ class Navigator {
         }
 
         let deviceHeading = this.calculateHeading(this.getPreviousMovement().latLng, currentPosition.latLng);
-
+        alert(deviceHeading);
         this.updateMarker({
             position: currentPosition.latLng,
             map: this.map,

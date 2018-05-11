@@ -218,7 +218,6 @@ class Navigator {
                 rotation: deviceHeading,
                 scale: 10,
                 anchor: new google.maps.Point(0, 3),
-                rotation: 0,
                 fillColor: "#0000FF",
                 strokeWeight: 0,
                 strokeOpacity: 0.00001,

@@ -1,16 +1,23 @@
 // Map Initialisation callback.  Will be called when Maps API loads.
 var ACCURACY = 13;
 class Navigator {
+
+    // init variables
     constructor() {
         this.map = null;
+        // watch position options
         this.options = {
             enableHighAccuracy: true,
             timeout: 1200000,
             maximumAge: 0
         };
+        // next waypoint index is used to track which waypoint user need to reach
         this.nextWayPointIndex = 0;
+        // get user selected path
         this.path = this.getSelectedPath();
+        // user marker on map
         this.marker = null;
+        // accuracy circle
         this.circle = null;
         this.movementHistory = [];
         this.direction = {
@@ -49,11 +56,13 @@ class Navigator {
         return new google.maps.Circle(options);
     }
 
-    converDistance(distance) {
+    // convert distance to a more user friendly format
+    convertDistance(distance) {
         return (distance / 1000) > 1 ? (distance / 1000).toFixed(1) + " km" :
             distance.toFixed(0) + " m";
     }
 
+    // convert time to a more user friendly format
     converTime(time) {
         if (time == 0) {
             return 'Calculating....'
@@ -68,16 +77,19 @@ class Navigator {
         return (hrTxt + minTxt + secTxt);
     }
 
+    // calculate distance between two points
     calculateDistance(from, to) {
         return google.maps.geometry.spherical.computeDistanceBetween(
             from, to);
     }
 
+    // calculate heading between two points
     calculateHeading(from, to) {
         return google.maps.geometry.spherical.computeHeading(
             from, to);
     }
 
+    // draw poly line on the map, return a new Polyline object
     drawPoly(coordinates) {
         return new google.maps.Polyline({
             path: coordinates,
@@ -88,6 +100,7 @@ class Navigator {
         });
     }
 
+    // get user selected path
     getSelectedPath() {
         let path = JSON.parse(localStorage.getItem('selectedPath'));
         if (path) {
@@ -97,6 +110,7 @@ class Navigator {
         return null;
     }
 
+    // get distance user traveled based on movement history
     getDistanceTravled() {
         let distance = 0;
         let lastLatLng = null;
@@ -111,10 +125,12 @@ class Navigator {
         return Math.round(distance * 100) / 100;
     }
 
+    // calculate distance remaining based on user current location and waypoints left.
     getDistanceRemaining(currentPosition) {
+        // get distance that from current location to next waypoint
         let distance = google.maps.geometry.spherical.computeDistanceBetween(
             currentPosition.latLng, this.path.getWayPointAt(this.nextWayPointIndex));
-
+        // add distance from next waypoint to destination
         for (let i = this.nextWayPointIndex, j = this.path.locations.length - 1; i < j; i++) {
             distance += google.maps.geometry.spherical.computeDistanceBetween(
                 this.path.getWayPointAt(i), this.path.getWayPointAt(i + 1));
@@ -139,22 +155,21 @@ class Navigator {
         }
         return (distance / speed).toFixed(0);
     }
-
-
-
+    // update marker on the map
     updateMarker(options) {
         this.marker.setOptions(options);
     }
-
+    // update accuracy circle on the map
     updateCircle(options) {
         this.circle.setOptions(options);
     }
 
+    // success callback for watch position
     positionSuccess(position) {
         if (!this.path) {
             return;
         }
-
+        // user current position
         let currentPosition = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -164,17 +179,21 @@ class Navigator {
         }
 
 
-
+        // add current position to movement history
         this.addToMovementHistory(currentPosition);
 
 
         // first time running
-        if (!this.map) {
+        if (!this.map) { // map not created
+            // create map
             this.map = new google.maps.Map(document.getElementById('map'), {
                 center: currentPosition.latLng,
                 zoom: 18
             });
+            // draw polyline on map
             this.drawPoly(this.path.locations).setMap(this.map);
+
+            // create marker on map
             this.marker = this.createMarker({
                 map: this.map,
                 position: currentPosition.latLng,
@@ -190,7 +209,7 @@ class Navigator {
                 },
             });
 
-
+            // create accuracy circle on map
             this.circle = this.createCircle({
                 center: currentPosition.latLng,
                 radius: currentPosition.accuracy,
@@ -203,14 +222,19 @@ class Navigator {
             this.map.fitBounds(this.circle.getBounds());
         }
 
+        // set map center to user current location
         this.map.setCenter(currentPosition.latLng);
 
+        // accuracy is too big
         if (position.coords.accuracy > ACCURACY) {
             displayMessage("Accuracy not suitable", 1000);
             return;
         }
 
+        // get user's device heading
         let deviceHeading = this.calculateHeading(this.getPreviousMovement().latLng, currentPosition.latLng);
+
+        // update marker heading based on device heading
         this.updateMarker({
             position: currentPosition.latLng,
             map: this.map,
@@ -226,24 +250,33 @@ class Navigator {
             }
         });
         this.marker.setMap(this.map);
+
+        // udpate accuracy circle
         this.updateCircle({
             fillColor: currentPosition.accuracy < ACCURACY ? "#00FF00" : "#FF0000",
             center: currentPosition.latLng,
             radius: currentPosition.accuracy,
         });
 
+        // get next waypoint
         let nextWayPoint = this.path.getWayPointAt(this.nextWayPointIndex);
 
+        // if reached next waypoint
         if (this.calculateDistance(
                 currentPosition.latLng, nextWayPoint) < currentPosition.accuracy) {
+            // if not more nextway point user reached the destination
             if (++this.nextWayPointIndex > this.path.locations.lenght - 1) {
                 displayMessage("reached destination", 1000);
                 return;
             }
+
+            // move the next waypoint
             nextWayPoint = this.path.getWayPointAt(this.nextWayPointIndex);
         }
-
+        // get waypoint heading
         let wayPointHeading = this.calculateHeading(currentPosition.latLng, nextWayPoint) - deviceHeading;
+
+        // update direction icon
         this.updateDirectionIndicator(wayPointHeading);
 
         let distTravelled = this.getDistanceTravled();
@@ -253,6 +286,8 @@ class Navigator {
         let avgSpeed = this.getAverageSpeed(distTravelled, travelTime);
 
         let timeRemaining = this.getTimeRemaining(distRemaining, avgSpeed);
+
+        // update time speed info.
         this.updateInfo({
             avgSpeed: avgSpeed,
             timeRemaining: timeRemaining,
@@ -268,7 +303,7 @@ class Navigator {
         document.getElementById("timeRemaining").innerHTML =
             this.converTime(options.timeRemaining);
         document.getElementById("distRemaining").innerHTML =
-            this.converDistance(options.distRemaining);
+            this.convertDistance(options.distRemaining);
     }
 
 
@@ -277,12 +312,14 @@ class Navigator {
         this.movementHistory.push(movement);
     }
 
+    // get last item in movement history
     getPreviousMovement() {
         if (this.movementHistory.length) {
             return this.movementHistory[this.movementHistory.length - 1];
         }
         return null;
     }
+
 
     updateDirectionIndicator(heading) {
         let type = '';
@@ -302,7 +339,7 @@ class Navigator {
             type = "U";
         }
         let direction = this.direction[type];
-
+        // based on type, update the direction icon 
         document.getElementById("directionImg").src = direction.img;
         document.getElementById("nextAction").innerHTML = direction.text;
     }
@@ -326,6 +363,7 @@ class Navigator {
         displayMessage(errorMessage, 10000);
     }
 
+    // enter point for navigation
     startNavigate() {
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition((position) => {
@@ -340,6 +378,7 @@ class Navigator {
 
 }
 
+// callback for google map api
 function startNavigate() {
     let engNavigator = new Navigator();
     engNavigator.startNavigate();

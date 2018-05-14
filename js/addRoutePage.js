@@ -3,17 +3,22 @@ var marker;
 var startMarker;
 var endMarker;
 var poly;
-
+// locate user current postion
 function locateUser() {
     if (navigator.geolocation) {
+
         navigator.geolocation.getCurrentPosition((position) => {
+            // success callback for getcurrentposition
             let latitude = position.coords.latitude;
             let longitude = position.coords.longitude;
             let accuracy = position.coords.accuracy;
             console.log(map);
-            if (map) {
+           
+            if (map) { // map created
+                // set map center to current location
                 map.setCenter(new google.maps.LatLng(latitude, longitude));
             } else {
+                // ceate new map
                 map = new google.maps.Map(document.getElementById('addRouteMap'), {
                     center: { lat: latitude, lng: longitude },
                     zoom: 18
@@ -23,7 +28,9 @@ function locateUser() {
                     strokeOpacity: 1.0,
                     strokeWeight: 2
                 });
+                // draw poly
                 poly.setMap(map);
+                // add marker to map
                 addMarker(map, map.getCenter());
             }
         });
@@ -32,6 +39,7 @@ function locateUser() {
     }
 }
 
+// add map to to a position on a given map
 function addMarker(map, position) {
     if (marker) {
         marker.setMap(null);

@@ -30,12 +30,12 @@ function pathResponse(pathArray) {
         localStorage.setItem(MONASH_ROUTE, pathStringObject);
         var monashPathList = createPathList(MONASH_ROUTE);
         var userPathList = createPathList(USER_ROUTE);
-        if(monashPathList){
-             renderPathList(monashPathList, 'monashRoute');
+        if (monashPathList) {
+            renderPathList(monashPathList, 'monashRoute');
         }
-        if(userPathList){
+        if (userPathList) {
             renderPathList(userPathList, 'userRoute');
-        } 
+        }
     } else {
 
     }
@@ -46,9 +46,10 @@ function createPathList(source) {
     if (typeof(Storage) !== "undefined") {
         var pathFromLocalStroage = JSON.parse(localStorage.getItem(source));
         if (pathFromLocalStroage) {
-            pathFromLocalStroage.forEach((item) => {
+            for (let i = 0; i < pathFromLocalStroage.length; i++) {
+                let item = pathFromLocalStroage[i];
                 pathList.add(new Path(item.locations, item.title));
-            });
+            }
             return pathList;
         }
         return null;
@@ -59,7 +60,8 @@ function createPathList(source) {
 
 function renderPathList(pathList, target) {
     let listHtml = '';
-    pathList.list.forEach((path, index) => {
+    for (let index = 0; index < pathList.list.length; index++) {
+        let path = pathList.list[index];
         listHtml += `<a href="navigate.html"><li class="mdl-list__item mdl-list__item--three-line"
                         id="${pathList.name + index}">
                         <span class="mdl-list__item-primary-content">   
@@ -69,16 +71,16 @@ function renderPathList(pathList, target) {
                             </span>
                         </span>
                         </li></a>`;
-
-    });
+    }
 
     document.getElementById(target).innerHTML = listHtml;
 
-    pathList.list.forEach((path, index) => {
+    for (let index = 0; index < pathList.list.length; index++) {
+        let path = pathList.list[index];
         document.getElementById(pathList.name + index + '').addEventListener("click", () => {
             setSelectedPath(path)
         });
-    });
+    }
 }
 
 

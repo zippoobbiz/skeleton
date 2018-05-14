@@ -10,6 +10,10 @@
     height: 80vh;
 }
 
+#saveRoute{
+	cursor: pointer;
+}
+
 #directionImg{
 	position: absolute;
 	top:58vh;

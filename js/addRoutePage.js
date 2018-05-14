@@ -139,10 +139,10 @@ function saveRoute() {
     var path = poly.getPath();
     if (path.length > 0) {
         let locations = [];
-        path.forEach((location) => {
-            locations.push({ lat: location.lat(), lng: location.lng() });
-        });
-
+        for (let i = 0; i < path.length; i++) {
+        	let location = path[i];
+        	locations.push({ lat: location.lat(), lng: location.lng() });
+        }
         let userSavedPath = JSON.parse(localStorage.getItem(USER_ROUTE));
 
         if (!userSavedPath) {

@@ -1,5 +1,5 @@
 // Map Initialisation callback.  Will be called when Maps API loads.
-var ACCURACY = 15;
+var ACCURACY = 13;
 class Navigator {
     constructor() {
         this.map = null;
@@ -100,13 +100,14 @@ class Navigator {
     getDistanceTravled() {
         let distance = 0;
         let lastLatLng = null;
-        this.movementHistory.forEach((movement) => {
+        for (var i = 0; i < this.movementHistory.length; i++) {
+            let movement = this.movementHistory[i];
             let latLng = movement.latLng;
             if (lastLatLng) {
                 distance += google.maps.geometry.spherical.computeDistanceBetween(lastLatLng, latLng);
             }
             lastLatLng = latLng;
-        })
+        }
         return Math.round(distance * 100) / 100;
     }
 
@@ -159,7 +160,7 @@ class Navigator {
             longitude: position.coords.longitude,
             accuracy: position.coords.accuracy,
             time: position.timestamp,
-            latLng: new google.maps.LatLng( position.coords.latitude, position.coords.longitude),
+            latLng: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
         }
 
 
@@ -175,6 +176,7 @@ class Navigator {
             });
             this.drawPoly(this.path.locations).setMap(this.map);
             this.marker = this.createMarker({
+                map: this.map,
                 position: currentPosition.latLng,
                 icon: {
                     path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
@@ -187,7 +189,7 @@ class Navigator {
                     fillOpacity: 1,
                 },
             });
-            this.marker.setMap(this.map);
+
 
             this.circle = this.createCircle({
                 center: currentPosition.latLng,
@@ -203,20 +205,19 @@ class Navigator {
 
         this.map.setCenter(currentPosition.latLng);
 
-        if(position.coords.accuracy > ACCURACY){
-            displayMessage("Accuracy not suitable",1000);
+        if (position.coords.accuracy > ACCURACY) {
+            displayMessage("Accuracy not suitable", 1000);
             return;
         }
 
         let deviceHeading = this.calculateHeading(this.getPreviousMovement().latLng, currentPosition.latLng);
-        alert(deviceHeading);
         this.updateMarker({
             position: currentPosition.latLng,
             map: this.map,
             icon: {
                 path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                 rotation: deviceHeading,
-                scale: 10,
+                scale: 6,
                 anchor: new google.maps.Point(0, 3),
                 fillColor: "#0000FF",
                 strokeWeight: 0,
@@ -236,7 +237,7 @@ class Navigator {
         if (this.calculateDistance(
                 currentPosition.latLng, nextWayPoint) < currentPosition.accuracy) {
             if (++this.nextWayPointIndex > this.path.locations.lenght - 1) {
-                displayMessage("reached destination",1000);
+                displayMessage("reached destination", 1000);
                 return;
             }
             nextWayPoint = this.path.getWayPointAt(this.nextWayPointIndex);

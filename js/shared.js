@@ -54,13 +54,14 @@ class Path {
     distance() {
         let distance = 0;
         let lastLatLng = null;
-        this._locations.forEach((location) => {
+        for (var i = 0; i < this._locations.length; i++) {
+            let location = this._locations[i];
             let latLng = new google.maps.LatLng(location);
             if (lastLatLng) {
                 distance += google.maps.geometry.spherical.computeDistanceBetween(lastLatLng, latLng);
             }
             lastLatLng = latLng;
-        })
+        }
         return Math.round(distance * 100) / 100;
     }
 
@@ -68,15 +69,12 @@ class Path {
         return this.distance() + ' meters ' + this.numberOfTurns() + ' turns';
     }
 
-    getWayPointAt(index){
-        
+    getWayPointAt(index) {
+
         let location = this._locations[index];
-        if(location){
+        if (location) {
             return new google.maps.LatLng(location.lat, location.lng);
         }
         return null;
     }
 }
-
-
-
